@@ -17,6 +17,8 @@
 #ifndef POSE_TRACKING_LIBRARY_H
 #define POSE_TRACKING_LIBRARY_H
 
+#include <stdlib.h>
+
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__) || defined(__NT__)
   #ifdef COMPILING_DLL
   #define DLLEXPORT __declspec(dllexport)
