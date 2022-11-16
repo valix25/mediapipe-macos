@@ -68,17 +68,14 @@ cc_binary(
     deps = [
         ":pose_tracking_macos_lib"
     ],
-    # linkopts=['-static'],
-    linkopts = ['-Wl,-rpath,./'],
-    linkshared = 1,
-    # linkstatic = 1
+    linkopts = ['-Wl,-install_name,@rpath/pose_tracking_cpu_macos.dylib'],
+    linkshared = 1
 )
 
 cc_library(
     name = "pose_tracking_macos_lib",
     srcs = ["pose_tracking.cpp"],
     hdrs = ["pose_tracking.h"],
-    # visibility = ["//visibility:public"],
     deps = [
         "//mediapipe/framework:calculator_framework",
         "//mediapipe/framework/formats:image_frame",
@@ -102,7 +99,6 @@ cc_library(
         "//mediapipe/graphs/pose_tracking:pose_tracking_cpu_deps",
     ],
     alwayslink = 1
-    # linkstatic = 1
 )
 
 
