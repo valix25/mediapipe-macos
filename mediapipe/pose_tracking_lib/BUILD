@@ -64,11 +64,11 @@ cc_binary(
 
 # For MacOS
 cc_binary(
-    name = "pose_tracking_cpu_macos.dylib",
+    name = "libpose_tracking_cpu_macos.dylib",
     deps = [
         ":pose_tracking_macos_lib"
     ],
-    linkopts = ['-Wl,-install_name,@rpath/pose_tracking_cpu_macos.dylib'],
+    linkopts = ['-Wl,-install_name,@rpath/libpose_tracking_cpu_macos.dylib'],
     linkshared = 1
 )
 
