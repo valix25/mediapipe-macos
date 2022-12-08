@@ -107,3 +107,53 @@ After that, you should be able to run the build command again.
 - Link `pose_tracking_cpu.lib` and `pose_tracking_lib.dll.if.lib` statically in your project.
 - Make sure `opencv_world3410.dll` and `pose_tracking_lib.dll` are accessible in your working directory.
 - Includeptyh `mediapipe\pose_tracking_dll\pose_tracking.h` header file to access the methods of the library.
+
+
+# MacOS
+
+SUMMARY for pose tracking mediapipe lib:
+
+  - install bazel. (Or for x86_64 `$ brew install bazel`)     
+  `$ /opt/homebrew/bin/brew install bazel`   
+  `$ /opt/homebrew/bin/bazel --version`   
+  Current bazel version is 5.3.0  
+  - install opencv3 for mediapipe (Or for x86_64 `$ brew install opencv@3`. Will have to change back some paths for x86_64.)  
+  `$ /opt/homebrew/bin/brew install opencv@3`
+  - (maybe optional?) install ffmpeg with brew   
+  `$ /opt/homebrew/bin/brew install ffmpeg` (Or for x86_64 `$ brew install ffmpeg`).  
+  - change mediapipe/WORKSPACE file to point to the installed ffmpeg
+  ```
+  new_local_repository(
+      name = "macos_ffmpeg",
+      build_file = "@//third_party:ffmpeg_macos.BUILD",
+      # Uncomment the following for x86_64
+      # path = "/usr/local/opt/ffmpeg",
+      # Comment the following for x86_64
+      path = "/opt/homebrew/opt/ffmpeg",
+  )
+  ```
+  - change mediapipe/WORKSPACE to point to the installed opencv3
+  ```
+  new_local_repository(
+      name = "macos_opencv",
+      build_file = "@//third_party:opencv_macos.BUILD",
+      # For local MacOS builds, the path should point to an opencv@3 installation.
+      # If you edit the path here, you will also need to update the corresponding
+      # prefix in "opencv_macos.BUILD".
+      # Uncomment the following for x86_64
+      # path = "/usr/local",
+      # Comment the following for x86_64
+      path = "/opt/homebrew",
+  )
+  ```
+  - change opencv_macos.BUILD (optional if already like this)
+  ```
+  # The path to OpenCV is a combination of the path set for "macos_opencv"
+  # in the WORKSPACE file and the prefix here.
+  PREFIX = "opt/opencv@3"
+  ```
+  - create pose-tracking dylib.  
+  `$ cd mediapipe-macos/mediapipe/`  
+  `$ /opt/homebrew/bin/bazel build -c opt --define MEDIAPIPE_DISABLE_GPU=1 mediapipe/pose_tracking_lib:libpose_tracking_cpu_macos.dylib`  
+  or for x86_64 `$ bazel build -c opt --define MEDIAPIPE_DISABLE_GPU=1 mediapipe/pose_tracking_lib:libpose_tracking_cpu_macos.dylib`   
+  The .dylib should be created in `mediapipe/bazel-bin/mediapipe/pose_tracking_lib`. Will have to copy this library where it is needed.
